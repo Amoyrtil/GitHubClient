@@ -14,7 +14,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.kaeritei.githubclient.ui.theme.GitHubClientTheme
 
 class MainActivity : ComponentActivity() {
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()

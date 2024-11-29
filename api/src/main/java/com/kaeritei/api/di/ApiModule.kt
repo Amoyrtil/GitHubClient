@@ -12,7 +12,7 @@ import dagger.hilt.components.SingletonComponent
 
 @Module
 @InstallIn(SingletonComponent::class)
-class ApiModule  {
+class ApiModule {
     @Provides
     fun provideApiClient(
         @ApplicationContext context: Context,

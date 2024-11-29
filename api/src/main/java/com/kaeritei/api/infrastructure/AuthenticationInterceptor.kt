@@ -7,14 +7,16 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class AuthenticationInterceptor @Inject constructor() : Interceptor {
+class AuthenticationInterceptor
+    @Inject
+    constructor() : Interceptor {
+        override fun intercept(chain: Interceptor.Chain): Response {
+            val personalAccessToken = BuildConfig.PERSONAL_ACCESS_TOKEN
+            val request =
+                chain.request().newBuilder().apply {
+                    addHeader("Authorization", personalAccessToken)
+                }.build()
 
-    override fun intercept(chain: Interceptor.Chain): Response {
-        val personalAccessToken = BuildConfig.PERSONAL_ACCESS_TOKEN
-        val request = chain.request().newBuilder().apply {
-                addHeader("Authorization", personalAccessToken)
-            }.build()
-
-        return chain.proceed(request)
+            return chain.proceed(request)
+        }
     }
-}
