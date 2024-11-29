@@ -14,6 +14,9 @@ android {
         minSdk = libs.versions.minSdk.get().toInt()
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
+
+        val personalAccessToken = System.getenv("PERSONAL_ACCESS_TOKEN")
+        buildConfigField("String", "PERSONAL_ACCESS_TOKEN", "\"$personalAccessToken\"")
     }
 
     buildTypes {
