@@ -1,6 +1,12 @@
 *.iml
 .gradle
 /local.properties
+.DS_Store
+/build
+/captures
+.externalNativeBuild
+.cxx
+local.properties
 /.idea/caches
 /.idea/libraries
 /.idea/modules.xml
@@ -11,9 +17,5 @@
 /.idea/deploymentTargetSelector.xml
 /.idea/inspectionProfiles/Project_Default.xml
 /.idea/runConfigurations.xml
-.DS_Store
-/build
-/captures
-.externalNativeBuild
-.cxx
-local.properties
+/.idea/kotlinc.xml
+/.idea/vcs.xml
