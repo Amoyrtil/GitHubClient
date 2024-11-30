@@ -1,4 +1,4 @@
-package com.kaeritei.githubclient.ui.theme
+package com.kaeritei.githubclient.ui.component
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle

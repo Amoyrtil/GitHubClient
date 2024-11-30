@@ -1,4 +1,4 @@
-package com.kaeritei.githubclient.ui.theme
+package com.kaeritei.githubclient.ui.component
 
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
