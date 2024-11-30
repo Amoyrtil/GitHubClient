@@ -48,7 +48,7 @@ import com.squareup.moshi.JsonClass
 data class UserDetailResponse(
     @Json(name = "avatar_url") val avatarUrl: String,
     @Json(name = "login") val login: String,
-    @Json(name = "name") val name: String,
+    @Json(name = "name") val name: String?,
     @Json(name = "followers") val followers: Int,
     @Json(name = "following") val following: Int,
 )
