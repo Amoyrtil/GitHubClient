@@ -17,6 +17,7 @@ ktlint = "12.1.2"
 ksp = "2.1.0-1.0.29"
 dagger-hilt = "2.52"
 retrofit = "2.11.0"
+okhttp = "5.0.0-alpha.14"
 moshi = "1.15.1"
 
 [plugins]
@@ -52,6 +53,11 @@ dagger-hilt-android = { group = "com.google.dagger", name = "hilt-android", vers
 ## https://github.com/square/retrofit
 retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
 retrofit-converter-moshi = { group = "com.squareup.retrofit2", name = "converter-moshi", version.ref = "retrofit" }
+
+## https://github.com/square/okhttp
+okhttp-bom = { group = "com.squareup.okhttp3", name = "okhttp-bom", version.ref = "okhttp" }
+okhttp = { group = "com.squareup.okhttp3", name = "okhttp" }
+okhttp-logging-interceptor = { group = "com.squareup.okhttp3", name = "logging-interceptor" }
 
 ## https://github.com/square/moshi
 moshi-kotlin = { group = "com.squareup.moshi", name = "moshi-kotlin", version.ref = "moshi" }
