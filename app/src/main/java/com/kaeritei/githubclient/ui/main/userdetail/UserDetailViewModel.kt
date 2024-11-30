@@ -72,8 +72,12 @@ class UserDetailViewModel
         val transitionFlow: SharedFlow<UserDetailDestination> = _transitionFlow
 
         @OptIn(ExperimentalCoroutinesApi::class)
-        fun fetchUserDetail(userName: String) =
+        fun refreshUserData(userName: String) =
             viewModelScope.launch(exceptionHandler) {
+                viewModelState.update {
+                    UserDetailViewModelState()
+                }
+
                 val deferredUserDetail =
                     async {
                         apiClientWrapper.getUserDetail(userName).successOrThrow()
