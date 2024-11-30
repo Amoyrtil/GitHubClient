@@ -58,6 +58,7 @@ dependencies {
     implementation(libs.androidx.material3)
     ksp(libs.dagger.hilt.compiler)
     implementation(libs.dagger.hilt.android)
+    implementation(libs.retrofit)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
