@@ -7,34 +7,29 @@ import com.kaeritei.githubclient.data.api.payload.UserSearchPayload
 import com.kaeritei.githubclient.data.api.successOrThrow
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineExceptionHandler
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 sealed interface UserSearchUiState {
-    data object Init : UserSearchUiState
+    val queryText: String
+
+    data class Empty(
+        override val queryText: String,
+    ) : UserSearchUiState
 
     data class ContentIsReady(
         val userListResult: List<ListUser>,
+        override val queryText: String,
     ) : UserSearchUiState
-}
-
-private data class UserSearchViewModelState(
-    val userListResult: List<ListUser>? = null,
-) {
-    fun toUiState(): UserSearchUiState =
-        if (userListResult == null) {
-            UserSearchUiState.Init
-        } else {
-            UserSearchUiState.ContentIsReady(userListResult)
-        }
 }
 
 @HiltViewModel
@@ -53,28 +48,77 @@ class UserSearchViewModel
                 }
             }
 
-        private val viewModelState = MutableStateFlow(UserSearchViewModelState())
-        val uiState: StateFlow<UserSearchUiState> =
-            viewModelState
-                .map { it.toUiState() }
-                .stateIn(
-                    viewModelScope,
-                    SharingStarted.Eagerly,
-                    viewModelState.value.toUiState(),
-                )
+        private val userListState = MutableStateFlow(emptyList<ListUser>())
+        private val queryTextState = MutableStateFlow("")
 
-        fun searchUser(query: String) =
+        val uiState =
+            combine(
+                userListState,
+                queryTextState,
+            ) { userList, queryText ->
+                generateUiState(userList, queryText)
+            }.stateIn(
+                viewModelScope,
+                SharingStarted.Eagerly,
+                generateUiState(userListState.value, queryTextState.value),
+            )
+
+        init {
+            observeQueryUpdate()
+        }
+
+        fun updateQueryText(query: String) =
             viewModelScope.launch(exceptionHandler) {
-                val payload =
-                    UserSearchPayload(
-                        query = query,
-                        target = UserSearchPayload.SearchTargetType.User,
-                    )
-                val response = apiClientWrapper.getUserQuerySearch(payload).successOrThrow()
-                val userListResult = response.items.map { it.toUiCompatible() }
-
-                viewModelState.update { it.copy(userListResult = userListResult) }
+                queryTextState.emit(query)
             }
+
+        @OptIn(FlowPreview::class)
+        private fun observeQueryUpdate() =
+            viewModelScope.launch(exceptionHandler) {
+                queryTextState
+                    .debounce(500)
+                    .distinctUntilChanged()
+                    .collect {
+                        if (it.isEmpty()) {
+                            resetSearchResult()
+                        } else {
+                            searchUser(it)
+                        }
+                    }
+            }
+
+        private suspend fun resetSearchResult() {
+            userListState.emit(emptyList())
+            queryTextState.emit("")
+        }
+
+        private suspend fun searchUser(query: String) {
+            val payload =
+                UserSearchPayload(
+                    query = query,
+                    target = UserSearchPayload.SearchTargetType.User,
+                )
+            val response = apiClientWrapper.getUserQuerySearch(payload).successOrThrow()
+            val userListResult = response.items.map { it.toUiCompatible() }
+
+            userListState.emit(userListResult)
+        }
+
+        private fun generateUiState(
+            userList: List<ListUser>,
+            queryText: String,
+        ): UserSearchUiState {
+            return if (userList.isEmpty()) {
+                UserSearchUiState.Empty(
+                    queryText = queryText,
+                )
+            } else {
+                UserSearchUiState.ContentIsReady(
+                    userListResult = userList,
+                    queryText = queryText,
+                )
+            }
+        }
 
         private fun com.kaeritei.api.models.ListUser.toUiCompatible(): ListUser {
             return ListUser(

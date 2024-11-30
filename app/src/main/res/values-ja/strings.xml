@@ -2,4 +2,6 @@
     <string name="app_name">GitHubClient</string>
     <string name="browser_app_not_found_error_message">ブラウザアプリが見つかりませんでした。</string>
     <string name="ok_button_label">OK</string>
+    <string name="user_search_input_placeholder">GitHubのユーザーを検索してみましょう</string>
+    <string name="user_not_found_yet_message">ユーザーが見つかっていません。</string>
 </resources>
