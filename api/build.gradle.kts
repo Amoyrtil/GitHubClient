@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
@@ -15,7 +17,9 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
 
-        val personalAccessToken = System.getenv("PERSONAL_ACCESS_TOKEN")
+        val localProperties = Properties()
+        localProperties.load(rootProject.file("local.properties").inputStream())
+        val personalAccessToken = localProperties.getProperty("PERSONAL_ACCESS_TOKEN")
         buildConfigField("String", "PERSONAL_ACCESS_TOKEN", "\"$personalAccessToken\"")
     }
 

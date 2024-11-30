@@ -14,7 +14,7 @@ class AuthenticationInterceptor
             val personalAccessToken = BuildConfig.PERSONAL_ACCESS_TOKEN
             val request =
                 chain.request().newBuilder().apply {
-                    addHeader("Authorization", personalAccessToken)
+                    addHeader("Authorization", "Bearer $personalAccessToken")
                 }.build()
 
             return chain.proceed(request)
