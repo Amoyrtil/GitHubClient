@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">GitHubClient</string>
+    <string name="browser_app_not_found_error_message">Couldn\'t find any web browser to open the URL.</string>
+    <string name="ok_button_label">OK</string>
 </resources>
