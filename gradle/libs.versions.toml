@@ -22,6 +22,7 @@ okhttp = "5.0.0-alpha.14"
 moshi = "1.15.1"
 browser = "1.8.0"
 serializationCore = "1.7.3"
+coil = "2.7.0"
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
@@ -68,3 +69,6 @@ okhttp-logging-interceptor = { group = "com.squareup.okhttp3", name = "logging-i
 
 ## https://github.com/square/moshi
 moshi-kotlin = { group = "com.squareup.moshi", name = "moshi-kotlin", version.ref = "moshi" }
+
+## https://github.com/coil-kt/coil
+coil-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }
