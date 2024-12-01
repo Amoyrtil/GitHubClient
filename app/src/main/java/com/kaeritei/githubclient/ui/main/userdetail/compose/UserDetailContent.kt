@@ -15,6 +15,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Create
 import androidx.compose.material.icons.filled.Star
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -44,10 +45,15 @@ fun UserDetailContent(
         ProfileContent(
             userDetail = userDetail,
         )
-        RepositoryContent(
-            repositories = repositories,
-            onClickItem = onClickRepository,
-        )
+        if (repositories.isNotEmpty()) {
+            Spacer(modifier = Modifier.size(16.dp))
+            RepositoryHeader()
+            Spacer(modifier = Modifier.size(8.dp))
+            RepositoryContent(
+                repositories = repositories,
+                onClickItem = onClickRepository,
+            )
+        }
     }
 }
 
@@ -56,7 +62,11 @@ private fun ProfileContent(userDetail: UserDetail) {
     Row(
         modifier =
             Modifier
-                .padding(16.dp)
+                .padding(
+                    start = 16.dp,
+                    top = 16.dp,
+                    end = 16.dp,
+                )
                 .fillMaxWidth(),
     ) {
         RoundUserIcon(
@@ -120,10 +130,9 @@ private fun ProfileUserName(
     Text(
         text = "@$userName",
         style =
-            if (isUserNameOnly)
-                {
-                    MaterialTheme.typography.titleLarge
-                } else {
+            if (isUserNameOnly) {
+                MaterialTheme.typography.titleLarge
+            } else {
                 MaterialTheme.typography.labelLarge
             },
         overflow = TextOverflow.Ellipsis,
@@ -176,17 +185,13 @@ private fun RepositoryContent(
     repositories: List<ListRepository>,
     onClickItem: (ListRepository) -> Unit,
 ) {
-    if (repositories.isEmpty())
-        {
-            return
-        }
     LazyColumn {
-        item { RepositoryHeader() }
         items(repositories) { repository ->
             RepositoryItem(
                 repository = repository,
                 onClick = { onClickItem(repository) },
             )
+            HorizontalDivider()
         }
     }
 }
@@ -209,7 +214,7 @@ private fun RepositoryItem(
         modifier =
             Modifier
                 .clickable { onClick() }
-                .padding(16.dp)
+                .padding(horizontal = 16.dp, vertical = 10.dp)
                 .fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(4.dp),
     ) {
@@ -219,15 +224,14 @@ private fun RepositoryItem(
             overflow = TextOverflow.Ellipsis,
             maxLines = 1,
         )
-        if (repository.description.isNotEmpty())
-            {
-                Text(
-                    text = repository.description,
-                    style = MaterialTheme.typography.bodySmall,
-                    overflow = TextOverflow.Ellipsis,
-                    maxLines = 2,
-                )
-            }
+        if (repository.description.isNotEmpty()) {
+            Text(
+                text = repository.description,
+                style = MaterialTheme.typography.bodySmall,
+                overflow = TextOverflow.Ellipsis,
+                maxLines = 2,
+            )
+        }
         Row(
             verticalAlignment = Alignment.CenterVertically,
         ) {
