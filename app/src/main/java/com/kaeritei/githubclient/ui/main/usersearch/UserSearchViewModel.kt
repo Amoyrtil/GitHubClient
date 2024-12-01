@@ -83,7 +83,7 @@ class UserSearchViewModel
         private fun observeQueryUpdate() =
             viewModelScope.launch(exceptionHandler) {
                 queryTextState
-                    .debounce(500)
+                    .debounce(300)
                     .distinctUntilChanged()
                     .collect {
                         if (it.isEmpty()) {

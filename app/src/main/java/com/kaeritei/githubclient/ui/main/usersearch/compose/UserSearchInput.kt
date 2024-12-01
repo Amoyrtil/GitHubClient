@@ -35,7 +35,7 @@ fun UserSearchInput(
         },
         placeholder = {
             Text(
-                text = stringResource(R.string.user_search_input_placeholder)
+                text = stringResource(R.string.user_search_input_placeholder),
             )
         },
         trailingIcon = {

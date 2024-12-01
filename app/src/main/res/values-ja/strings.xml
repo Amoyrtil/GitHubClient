@@ -2,7 +2,10 @@
     <string name="app_name">GitHubClient</string>
     <string name="browser_app_not_found_error_message">ブラウザアプリが見つかりませんでした。</string>
     <string name="ok_button_label">OK</string>
-    <string name="user_search_input_placeholder">GitHubのユーザーを検索してみましょう</string>
+    <string name="user_search_input_placeholder">ユーザーを検索</string>
     <string name="user_not_found_yet_message">ユーザーが見つかっていません。</string>
     <string name="unknown_error_message">不明なエラーが発生しました。</string>
+    <string name="follow_label">フォロー</string>
+    <string name="followers_label">フォロワー</string>
+    <string name="repository_header">リポジトリ一覧</string>
 </resources>

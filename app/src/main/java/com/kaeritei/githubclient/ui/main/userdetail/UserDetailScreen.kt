@@ -1,5 +1,6 @@
 package com.kaeritei.githubclient.ui.main.userdetail
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -42,17 +43,20 @@ private fun UserDetailScreen(
     uiState: UserDetailUiState,
     onClickRepository: (ListRepository) -> Unit,
 ) {
-    when (uiState) {
-        is UserDetailUiState.Loading -> {
-            LoadingContent()
-        }
-        is UserDetailUiState.ContentIsReady -> {
-            UserDetailContent(
-                modifier = Modifier.safeDrawingPadding(),
-                userDetail = uiState.userDetail,
-                repositories = uiState.repositories,
-                onClickRepository = onClickRepository,
-            )
+    Box(
+        modifier = Modifier.safeDrawingPadding(),
+    ) {
+        when (uiState) {
+            is UserDetailUiState.Loading -> {
+                LoadingContent()
+            }
+            is UserDetailUiState.ContentIsReady -> {
+                UserDetailContent(
+                    userDetail = uiState.userDetail,
+                    repositories = uiState.repositories,
+                    onClickRepository = onClickRepository,
+                )
+            }
         }
     }
 }
