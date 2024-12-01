@@ -1,8 +1,11 @@
+import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.kotlin.power.assert)
     alias(libs.plugins.google.devtools.ksp)
     alias(libs.plugins.dagger.hilt)
     alias(libs.plugins.gradle.ktlint)
@@ -45,6 +48,21 @@ android {
     ktlint {
         android = true
     }
+
+    @OptIn(ExperimentalKotlinGradlePluginApi::class)
+    powerAssert {
+        // デバッグ情報を表示させたい関数・メソッド
+        functions =
+            listOf(
+                "kotlin.assert",
+                "kotlin.require",
+                "kotlin.test.assertTrue",
+                "kotlin.test.assertEquals",
+                "kotlin.test.assertNull",
+            )
+        // デバッグ情報を表示させたいソースセット
+        includedSourceSets = listOf("debugUnitTest")
+    }
 }
 
 dependencies {
@@ -65,6 +83,9 @@ dependencies {
     implementation(libs.retrofit)
     implementation(libs.coil.compose)
     testImplementation(libs.junit)
+    testImplementation(libs.mockito.kotlin)
+    testImplementation(libs.kotlinx.coroutines.test)
+    testImplementation(kotlin("test"))
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
