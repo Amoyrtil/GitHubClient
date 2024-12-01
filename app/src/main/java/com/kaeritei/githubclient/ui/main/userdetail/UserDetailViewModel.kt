@@ -102,7 +102,10 @@ class UserDetailViewModel
                 viewModelState.update {
                     UserDetailViewModelState(
                         userDetail = userDetailResponse.asUserDetail(),
-                        repositories = repositoriesResponse.map { it.toUiCompatible() },
+                        repositories =
+                            repositoriesResponse
+                                .filter { !it.fork } // フォークしたリポジトリは表示しないので除外
+                                .map { it.toUiCompatible() },
                     )
                 }
             }
