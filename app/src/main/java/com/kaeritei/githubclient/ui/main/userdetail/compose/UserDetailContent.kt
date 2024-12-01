@@ -8,10 +8,15 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Create
 import androidx.compose.material.icons.filled.Star
@@ -20,14 +25,22 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.kaeritei.githubclient.R
+import com.kaeritei.githubclient.ui.common.NestedScrollConnections
 import com.kaeritei.githubclient.ui.component.RoundUserIcon
 import com.kaeritei.githubclient.ui.main.userdetail.ListRepository
 import com.kaeritei.githubclient.ui.main.userdetail.UserDetail
@@ -39,18 +52,49 @@ fun UserDetailContent(
     onClickRepository: (ListRepository) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val density = LocalDensity.current
+    var wrapperHeightDp by remember { mutableFloatStateOf(0f) }
+    var lazyListHeaderHeightDp by remember { mutableFloatStateOf(0f) }
+    val lazyColumnHeightDp = wrapperHeightDp - lazyListHeaderHeightDp
+    val wrapperScrollState = rememberScrollState()
+    val lazyListStates = rememberLazyListState()
+    val nestedScrollConnection =
+        NestedScrollConnections.hideFixedHeaderContent(
+            wrapperScrollableState = wrapperScrollState,
+            contentLazyListState = lazyListStates,
+        )
+
     Column(
-        modifier = modifier.fillMaxSize(),
+        modifier =
+            modifier.fillMaxSize()
+                .onGloballyPositioned {
+                    with(density) {
+                        wrapperHeightDp = it.size.height.toDp().value
+                    }
+                }
+                .nestedScroll(nestedScrollConnection)
+                .verticalScroll(wrapperScrollState),
     ) {
         ProfileContent(
             userDetail = userDetail,
         )
         if (repositories.isNotEmpty()) {
-            Spacer(modifier = Modifier.size(16.dp))
-            RepositoryHeader()
-            Spacer(modifier = Modifier.size(8.dp))
+            RepositoryHeader(
+                modifier =
+                    Modifier.onGloballyPositioned {
+                        with(density) {
+                            lazyListHeaderHeightDp = it.size.height.toDp().value
+                        }
+                    },
+            )
             RepositoryContent(
+                modifier =
+                    Modifier.heightIn(
+                        min = 0.dp,
+                        max = lazyColumnHeightDp.dp,
+                    ),
                 repositories = repositories,
+                listState = lazyListStates,
                 onClickItem = onClickRepository,
             )
         }
@@ -183,9 +227,14 @@ private fun FollowLabel(
 @Composable
 private fun RepositoryContent(
     repositories: List<ListRepository>,
+    listState: LazyListState,
     onClickItem: (ListRepository) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
-    LazyColumn {
+    LazyColumn(
+        modifier = modifier,
+        state = listState,
+    ) {
         items(repositories) { repository ->
             RepositoryItem(
                 repository = repository,
@@ -197,11 +246,17 @@ private fun RepositoryContent(
 }
 
 @Composable
-private fun RepositoryHeader() {
+private fun RepositoryHeader(modifier: Modifier = Modifier) {
     Text(
         text = stringResource(R.string.repository_header),
         style = MaterialTheme.typography.titleMedium,
-        modifier = Modifier.padding(horizontal = 16.dp),
+        modifier =
+            modifier.padding(
+                start = 16.dp,
+                top = 16.dp,
+                end = 16.dp,
+                bottom = 8.dp,
+            ),
     )
 }
 
