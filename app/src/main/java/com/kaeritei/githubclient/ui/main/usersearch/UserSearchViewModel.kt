@@ -1,6 +1,5 @@
 package com.kaeritei.githubclient.ui.main.usersearch
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.kaeritei.githubclient.data.api.ApiClientWrapper
@@ -52,7 +51,6 @@ class UserSearchViewModel
                 viewModelScope.launch {
                     _systemErrorFlow.emit(exception)
                 }
-                Log.e(TAG, "Error occurred", exception)
             }
 
         private val userListState = MutableStateFlow(emptyList<ListUser>())
