@@ -6,6 +6,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.kaeritei.githubclient.ui.component.ErrorDialogEffect
 import com.kaeritei.githubclient.ui.component.LoadingContent
 import com.kaeritei.githubclient.ui.main.MainNavRoute
 import com.kaeritei.githubclient.ui.main.userdetail.compose.UserDetailContent
@@ -17,6 +18,10 @@ fun UserDetailScreen(
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val userName = navRoute.userName
+
+    ErrorDialogEffect(
+        errorFlow = viewModel.systemErrorFlow,
+    )
 
     LaunchedEffect(userName) {
         viewModel.refreshUserData(

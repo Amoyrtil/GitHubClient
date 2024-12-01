@@ -1,10 +1,12 @@
 package com.kaeritei.githubclient.ui.main.usersearch
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.kaeritei.githubclient.data.api.ApiClientWrapper
 import com.kaeritei.githubclient.data.api.payload.UserSearchPayload
 import com.kaeritei.githubclient.data.api.successOrThrow
+import com.kaeritei.githubclient.ui.main.userdetail.UserDetailViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.FlowPreview
@@ -38,6 +40,10 @@ class UserSearchViewModel
     constructor(
         private val apiClientWrapper: ApiClientWrapper,
     ) : ViewModel() {
+        companion object {
+            private val TAG = UserDetailViewModel::class.java.simpleName
+        }
+
         private val _systemErrorFlow = MutableSharedFlow<Throwable>()
         val systemErrorFlow: SharedFlow<Throwable> = _systemErrorFlow
 
@@ -46,6 +52,7 @@ class UserSearchViewModel
                 viewModelScope.launch {
                     _systemErrorFlow.emit(exception)
                 }
+                Log.e(TAG, "Error occurred", exception)
             }
 
         private val userListState = MutableStateFlow(emptyList<ListUser>())

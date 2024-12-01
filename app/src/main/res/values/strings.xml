@@ -4,4 +4,5 @@
     <string name="ok_button_label">OK</string>
     <string name="user_search_input_placeholder">Let\'s search for GitHub users</string>
     <string name="user_not_found_yet_message">No users found yet.</string>
+    <string name="unknown_error_message">An unknown error occurred.</string>
 </resources>

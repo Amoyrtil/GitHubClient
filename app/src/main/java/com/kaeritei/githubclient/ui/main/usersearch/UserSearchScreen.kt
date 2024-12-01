@@ -8,6 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.kaeritei.githubclient.ui.component.ErrorDialogEffect
 import com.kaeritei.githubclient.ui.main.MainNavRoute
 import com.kaeritei.githubclient.ui.main.usersearch.compose.UserSearchContent
 import com.kaeritei.githubclient.ui.main.usersearch.compose.UserSearchContentEmpty
@@ -19,6 +20,10 @@ fun UserSearchScreen(
     onClickUser: (MainNavRoute.UserDetail) -> Unit,
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+    ErrorDialogEffect(
+        errorFlow = viewModel.systemErrorFlow,
+    )
 
     UserSearchScreen(
         uiState = uiState,

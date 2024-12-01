@@ -1,5 +1,6 @@
 package com.kaeritei.githubclient.ui.main.userdetail
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.kaeritei.api.models.UserDetailResponse
@@ -48,6 +49,10 @@ class UserDetailViewModel
     constructor(
         private val apiClientWrapper: ApiClientWrapper,
     ) : ViewModel() {
+        companion object {
+            private val TAG = UserDetailViewModel::class.java.simpleName
+        }
+
         private val _systemErrorFlow = MutableSharedFlow<Throwable>()
         val systemErrorFlow: SharedFlow<Throwable> = _systemErrorFlow
 
@@ -56,6 +61,7 @@ class UserDetailViewModel
                 viewModelScope.launch {
                     _systemErrorFlow.emit(exception)
                 }
+                Log.e(TAG, "Error occurred", exception)
             }
 
         private val viewModelState = MutableStateFlow(UserDetailViewModelState())

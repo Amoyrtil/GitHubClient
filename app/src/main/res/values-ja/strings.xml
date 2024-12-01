@@ -4,4 +4,5 @@
     <string name="ok_button_label">OK</string>
     <string name="user_search_input_placeholder">GitHubのユーザーを検索してみましょう</string>
     <string name="user_not_found_yet_message">ユーザーが見つかっていません。</string>
+    <string name="unknown_error_message">不明なエラーが発生しました。</string>
 </resources>
